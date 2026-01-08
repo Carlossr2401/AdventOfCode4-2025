@@ -134,4 +134,4 @@ Cada parte cuenta con su propio punto de entrada independiente:
 - **Parte 1**: Ejecutar `software.aoc.day4.a.Main`
 - **Parte 2**: Ejecutar `software.aoc.day4.b.Main`
 
-Ambas soluciones esperan encontrar el archivo de datos de entrada en la ruta relativa: `src/main/resources/map`.
+Ambas soluciones esperan encontrar el archivo de datos de entrada en la ruta relativa: `src/main/resources/map.txt`.
