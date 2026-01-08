@@ -3,9 +3,10 @@ package software.aoc.day4.b;
 import java.util.ArrayList;
 import java.util.List;
 
-public record MapFinder(PaperRollMap initialMap) {
+public record MapFinder(PaperRollMap initialMap) implements Solver {
 
-    public int findTotalAccessibleAndRemoveAll() {
+    @Override
+    public int solve() {
         int totalRemoved = 0;
         // La referencia al mapa mutable (puntero)
         PaperRollMap currentMap = this.initialMap;

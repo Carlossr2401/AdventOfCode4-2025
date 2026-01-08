@@ -1,8 +1,9 @@
 package software.aoc.day4.a;
 
-public record MapFinder(PaperRollMap rollMap) {
+public record MapFinder(PaperRollMap rollMap) implements Solver {
 
-    public int findAccessible() {
+    @Override
+    public int solve() {
         int accessibleRolls = 0;
         int R = rollMap.getRows();
         int C = rollMap.getCols();
