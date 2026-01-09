@@ -26,7 +26,6 @@ El siguiente diagrama ilustra la estructura de las clases y sus relaciones. Nota
 
 ```mermaid
 classDiagram
-    namespace Package_A {
         class SolverA {
             <<interface>>
             +solve() int
@@ -52,7 +51,6 @@ classDiagram
             +List~List~String~~ grid
             +getValue(int r, int c) String
         }
-    }
 
     SolverA <|.. MapFinderA
     InstructionReaderA <|.. FileInstructionReaderA
@@ -66,6 +64,7 @@ classDiagram
 ### Diagrama de Clases apartado B
 
 ```mermaid
+classDiagram
     class SolverB {
         <<interface>>
         +solve() int
