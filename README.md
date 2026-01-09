@@ -22,72 +22,83 @@ El código se estructura en dos paquetes principales (`software.aoc.day4.a` y `s
 
 ### Diagrama de Clases apartado A
 
-El siguiente diagrama ilustra la estructura de las clases y sus relaciones. Notar cómo la estructura se replica independientemente en cada paquete, preservando la cohesión interna.
+El siguiente diagrama ilustra la estructura de las clases y sus relaciones en el paquete `software.aoc.day4.a`.
 
 ```mermaid
 classDiagram
-        class SolverA {
-            <<interface>>
-            +solve() int
-        }
-        class InstructionReaderA {
-            <<interface>>
-            +readAllLines() PaperRollMap
-        }
-        class FileInstructionReaderA {
-            -String filePath
-            +readAllLines() PaperRollMap
-        }
-        class MapFinderA {
-            -PaperRollMap rollMap
-            +solve() int
-            -findAccessible() int
-        }
-        class SolverFactoryA {
-            +create(String path)$ SolverA
-        }
-        class PaperRollMapA {
-            <<record>>
-            +List~List~String~~ grid
-            +getValue(int r, int c) String
-        }
+    class SolverA["Solver"] {
+        <<interface>>
+        +solve() int
+    }
+    class InstructionReaderA["InstructionReader"] {
+        <<interface>>
+        +readAllLines() PaperRollMap
+    }
+    class FileInstructionReaderA["FileInstructionReader"] {
+        -String filePath
+        +readAllLines() PaperRollMap
+    }
+    class MapFinderA["MapFinder"] {
+        <<record>>
+        -PaperRollMap rollMap
+        +solve() int
+        -countAdjacentRolls(int r, int c) int
+        -checkOutOfBounds(int r, int c) boolean
+    }
+    class SolverFactoryA["SolverFactory"] {
+        +create(String path)$ Solver
+    }
+    class PaperRollMapA["PaperRollMap"] {
+        <<record>>
+        +List~List~String~~ grid
+        +getRows() int
+        +getCols() int
+        +getValue(int r, int c) String
+    }
 
     SolverA <|.. MapFinderA
     InstructionReaderA <|.. FileInstructionReaderA
     SolverFactoryA ..> SolverA : Creates
     SolverFactoryA ..> FileInstructionReaderA : Uses
     MapFinderA --> PaperRollMapA : Uses
-
-
 ```
 
 ### Diagrama de Clases apartado B
 
+El siguiente diagrama ilustra la estructura para el paquete `software.aoc.day4.b`, destacando la mutabilidad controlada.
+
 ```mermaid
 classDiagram
-    class SolverB {
+    class SolverB["Solver"] {
         <<interface>>
         +solve() int
     }
-    class InstructionReaderB {
+    class InstructionReaderB["InstructionReader"] {
         <<interface>>
         +readAllLines() PaperRollMap
     }
-    class FileInstructionReaderB {
+    class FileInstructionReaderB["FileInstructionReader"] {
         -String filePath
         +readAllLines() PaperRollMap
     }
-    class MapFinderB {
+    class MapFinderB["MapFinder"] {
+        <<record>>
         -PaperRollMap initialMap
         +solve() int
-        -findTotalAccessibleAndRemoveAll() int
+        -findViableRollsInIteration(PaperRollMap map) MapFinderResult
+        -countAdjacentRolls(PaperRollMap map, int r, int c) int
+        -checkOutOfBounds(PaperRollMap map, int r, int c) boolean
     }
-    class SolverFactoryB {
-        +create(String path)$ SolverB
+    class SolverFactoryB["SolverFactory"] {
+        +create(String path)$ Solver
     }
-    class PaperRollMapB {
+    class PaperRollMapB["PaperRollMap"] {
         <<record>>
-        +updateMap(coords, val) PaperRollMapB
+        +List~List~String~~ grid
+        +getRows() int
+        +getCols() int
+        +getValue(int r, int c) String
+        +updateMap(List~Coordinate~ coords, String val) PaperRollMap
     }
 
     SolverB <|.. MapFinderB
