@@ -26,6 +26,9 @@ El siguiente diagrama ilustra la estructura de las clases y sus relaciones en el
 
 ```mermaid
 classDiagram
+    class MainA["Main"] {
+        +main(String[] args)$
+    }
     class SolverA["Solver"] {
         <<interface>>
         +solve() int
@@ -56,6 +59,8 @@ classDiagram
         +getValue(int r, int c) String
     }
 
+    MainA ..> SolverFactoryA : Uses
+    MainA ..> SolverA : Uses
     SolverA <|.. MapFinderA
     InstructionReaderA <|.. FileInstructionReaderA
     SolverFactoryA ..> SolverA : Creates
@@ -69,6 +74,9 @@ El siguiente diagrama ilustra la estructura para el paquete `software.aoc.day4.b
 
 ```mermaid
 classDiagram
+    class MainB["Main"] {
+        +main(String[] args)$
+    }
     class SolverB["Solver"] {
         <<interface>>
         +solve() int
@@ -101,6 +109,8 @@ classDiagram
         +updateMap(List~Coordinate~ coords, String val) PaperRollMap
     }
 
+    MainB ..> SolverFactoryB : Uses
+    MainB ..> SolverB : Uses
     SolverB <|.. MapFinderB
     InstructionReaderB <|.. FileInstructionReaderB
     SolverFactoryB ..> SolverB : Creates
