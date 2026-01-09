@@ -127,6 +127,45 @@ Implementado a través de `SolverFactory` en cada paquete.
 - **Propósito**: Abstraer la complejidad de la creación y configuración del grafo de objetos necesario para resolver el problema.
 - **Beneficio**: La clase principal `Main` permanece limpia y agnóstica a los detalles de implementación (como, por ejemplo, qué tipo de `InstructionReader` se está utilizando concretamente).
 
+#### Patrón Strategy
+
+Tal como has razonado, la estructura actual facilita la implementación del patrón **Strategy**, permitiendo seleccionar el algoritmo de resolución en tiempo de ejecución sin modificar el cliente.
+
+- **Estructura**: `Solver` actúa como la interfaz de la Estrategia, y `MapFinder` (tanto de la parte A como de la B) son las Estrategias Concretas.
+- **Ventaja**: El `Main` no necesita conocer la implementación específica. Podríamos unificar los `Main` y seleccionar el Solver adecuado mediante el `SolverFactory` basándonos en un parámetro de configuración.
+
+```mermaid
+classDiagram
+    class Main["Main (Client)"] {
+        +selectSolver(type)
+    }
+
+    class Solver["<<interface>> Solver (Strategy)"] {
+        +solve() int
+    }
+
+    class StaticSolver["MapFinder (Part A)"] {
+        +solve() int
+        note: Algoritmo Estático
+    }
+
+    class DynamicSolver["MapFinder (Part B)"] {
+        +solve() int
+        note: Simulación Dinámica
+    }
+
+    class Factory["SolverFactory"] {
+        +create(type) Solver
+    }
+
+    Main --> Solver : Uses
+    Main ..> Factory : Requests specific solver
+    Factory ..> StaticSolver : Instantiates
+    Factory ..> DynamicSolver : Instantiates
+    StaticSolver ..|> Solver : Implements
+    DynamicSolver ..|> Solver : Implements
+```
+
 ### Principios SOLID
 
 1.  **Single Responsibility Principle (SRP)**:

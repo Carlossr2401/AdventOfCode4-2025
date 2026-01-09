@@ -4,7 +4,7 @@ import java.io.IOException;
 
 public class SolverFactory {
     public static Solver create(String filePath) throws IOException {
-        FileInstructionReader reader = new FileInstructionReader(filePath);
+        InstructionReader<PaperRollMap> reader = new FileInstructionReader(filePath);
         PaperRollMap paperRollMap = reader.readAllLines();
         return new MapFinder(paperRollMap);
     }
