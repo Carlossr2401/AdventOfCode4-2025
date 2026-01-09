@@ -1,4 +1,4 @@
-package software.aoc.day4.a;
+package software.aoc.day4;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 public record FileInstructionReader(String filePath) implements InstructionReader<PaperRollMap> {
 
+    @Override
     public PaperRollMap readAllLines() throws IOException {
 
         List<List<String>> wholeMatrix = new ArrayList<>();

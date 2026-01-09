@@ -2,8 +2,11 @@ package software.aoc.day4.b;
 
 import java.util.ArrayList;
 import java.util.List;
+import software.aoc.day4.Coordinate;
+import software.aoc.day4.PaperRollMap;
+import software.aoc.day4.Solver;
 
-public record MapFinder(PaperRollMap initialMap) implements Solver {
+public record Part2Solver(PaperRollMap initialMap) implements Solver {
 
     @Override
     public int solve() {

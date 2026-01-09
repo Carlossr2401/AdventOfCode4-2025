@@ -1,4 +1,4 @@
-package software.aoc.day4.a;
+package software.aoc.day4;
 
 import java.io.IOException;
 

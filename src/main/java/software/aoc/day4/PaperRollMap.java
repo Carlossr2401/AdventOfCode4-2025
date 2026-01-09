@@ -1,4 +1,4 @@
-package software.aoc.day4.b;
+package software.aoc.day4;
 
 import java.util.ArrayList;
 import java.util.List;

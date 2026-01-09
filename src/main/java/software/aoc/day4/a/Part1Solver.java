@@ -1,6 +1,9 @@
 package software.aoc.day4.a;
 
-public record MapFinder(PaperRollMap rollMap) implements Solver {
+import software.aoc.day4.PaperRollMap;
+import software.aoc.day4.Solver;
+
+public record Part1Solver(PaperRollMap rollMap) implements Solver {
 
     @Override
     public int solve() {
