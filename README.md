@@ -20,7 +20,7 @@ El código se estructura en dos paquetes principales (`software.aoc.day4.a` y `s
 - **Aislamiento Total**: Se ha implementado una arquitectura de "Desacoplamiento Cero" (Zero Coupling). No existe código compartido entre las partes A y B.
 - **Justificación**: Aunque esto conlleva la duplicación de estructuras de datos básicas (`Coordinate`, `PaperRollMap`), garantiza que la evolución compleja de la Parte 2 (que requiere mutabilidad y recálculo de estados) no introduzca riesgos de regresión ni complejidad accidental en la lógica más simple de la Parte 1.
 
-### Diagrama de Clases
+### Diagrama de Clases apartado A
 
 El siguiente diagrama ilustra la estructura de las clases y sus relaciones. Notar cómo la estructura se replica independientemente en cada paquete, preservando la cohesión interna.
 
@@ -54,38 +54,42 @@ classDiagram
         }
     }
 
-    namespace Package_B {
-         class SolverB {
-            <<interface>>
-            +solve() int
-        }
-         class InstructionReaderB {
-            <<interface>>
-            +readAllLines() PaperRollMap
-        }
-        class FileInstructionReaderB {
-            -String filePath
-            +readAllLines() PaperRollMap
-        }
-        class MapFinderB {
-            -PaperRollMap initialMap
-            +solve() int
-            -findTotalAccessibleAndRemoveAll() int
-        }
-         class SolverFactoryB {
-            +create(String path)$ SolverB
-        }
-        class PaperRollMapB {
-            <<record>>
-            +updateMap(coords, val) PaperRollMapB
-        }
-    }
-
     SolverA <|.. MapFinderA
     InstructionReaderA <|.. FileInstructionReaderA
     SolverFactoryA ..> SolverA : Creates
     SolverFactoryA ..> FileInstructionReaderA : Uses
     MapFinderA --> PaperRollMapA : Uses
+
+
+```
+
+### Diagrama de Clases apartado B
+
+```mermaid
+    class SolverB {
+        <<interface>>
+        +solve() int
+    }
+    class InstructionReaderB {
+        <<interface>>
+        +readAllLines() PaperRollMap
+    }
+    class FileInstructionReaderB {
+        -String filePath
+        +readAllLines() PaperRollMap
+    }
+    class MapFinderB {
+        -PaperRollMap initialMap
+        +solve() int
+        -findTotalAccessibleAndRemoveAll() int
+    }
+    class SolverFactoryB {
+        +create(String path)$ SolverB
+    }
+    class PaperRollMapB {
+        <<record>>
+        +updateMap(coords, val) PaperRollMapB
+    }
 
     SolverB <|.. MapFinderB
     InstructionReaderB <|.. FileInstructionReaderB
