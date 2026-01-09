@@ -39,7 +39,15 @@ Se han implementado patrones de diseño para resolver problemas de creación y c
 - **Dependency Injection**:
   - Las dependencias principales (el modelo `PaperRollMap`) se inyectan en los constructores de `Part1Solver` y `Part2Solver`, separando la construcción del grafo de objetos de su uso.
 
-### 3. Diagrama de Arquitectura
+### 3. Clean Code y Refactorización
+
+Se ha prestado especial atención a la legibilidad y mantenimiento del código:
+
+- **Constants**: Uso de constantes (`ROLL_SYMBOL`, `MAX_NEIGHBORS`) para eliminar "magic numbers/strings".
+- **Meaningful Names**: Nombres de variables descriptivos (`rowCount`, `neighborRow`) en lugar de abreviaturas (`R`, `nr`).
+- **Small Methods**: Extracción de lógica compleja en métodos privados (`isRoll`, `isValidPosition`, `isAccessible`) para reducir la complejidad cognitiva de los algoritmos.
+
+### 4. Diagrama de Arquitectura
 
 ```mermaid
 classDiagram
@@ -59,11 +67,18 @@ classDiagram
     class Part1Solver {
         +Part1Solver(rollMap: PaperRollMap)
         +solve() int
+        -isRoll(row: int, col: int) boolean
+        -isAccessible(row: int, col: int) boolean
+        -isValidPosition(row: int, col: int) boolean
     }
 
     class Part2Solver {
         +Part2Solver(initialMap: PaperRollMap)
         +solve() int
+        -findViableRollsInIteration(map: PaperRollMap) MapFinderResult
+        -isRoll(map: PaperRollMap, row: int, col: int) boolean
+        -isAccessible(map: PaperRollMap, row: int, col: int) boolean
+        -isValidPosition(map: PaperRollMap, row: int, col: int) boolean
     }
 
     class InstructionReader~T~ {
@@ -98,7 +113,7 @@ classDiagram
     FileInstructionReader ..> PaperRollMap : crea
 ```
 
-### 4. Estructura del Proyecto
+### 5. Estructura del Proyecto
 
 La estructura de paquetes refleja la separación de responsabilidades:
 

@@ -8,88 +8,74 @@ import software.aoc.day4.Solver;
 
 public record Part2Solver(PaperRollMap initialMap) implements Solver {
 
+    private static final String ROLL_SYMBOL = "@";
+    private static final String EMPTY_SYMBOL = ".";
+    private static final int MAX_NEIGHBORS = 4;
+
     @Override
     public int solve() {
         int totalRemoved = 0;
-        // La referencia al mapa mutable (puntero)
         PaperRollMap currentMap = this.initialMap;
 
         while (true) {
-
-            // 1. Encontrar todos los rollos viables en el estado actual del mapa
             MapFinderResult iterationResult = findViableRollsInIteration(currentMap);
-
             int removedInThisStep = iterationResult.removedCount();
 
-            // 2. Condición de Terminación: Si no se encontró ninguno, el proceso ha finalizado.
             if (removedInThisStep == 0) {
                 break;
             }
 
-            // 3. Acumular el total
             totalRemoved += removedInThisStep;
-
-            // 4. Crear el nuevo mapa inmutable para la siguiente iteración,
-            // reemplazando los rollos viables por '.' (espacio vacío).
-            currentMap = currentMap.updateMap(iterationResult.removableCoordinates(), ".");
+            currentMap = currentMap.updateMap(iterationResult.removableCoordinates(), EMPTY_SYMBOL);
         }
 
         return totalRemoved;
     }
 
-    /**
-     * Realiza una sola iteración: identifica todos los rollos viables para la eliminación.
-     */
     private MapFinderResult findViableRollsInIteration(PaperRollMap currentMap) {
         List<Coordinate> coordinatesToRemove = new ArrayList<>();
-        int R = currentMap.getRows();
-        int C = currentMap.getCols();
+        int rowCount = currentMap.getRows();
+        int colCount = currentMap.getCols();
 
-        for (int r = 0; r < R; r++) {
-            for (int c = 0; c < C; c++) {
-
-                // Solo considerar rollos que aún estén presentes ('@')
-                if (currentMap.getValue(r, c).equals("@")) {
-
-                    // Si cumple la condición de accesibilidad (menos de 4 vecinos '@')
-                    if (countAdjacentRolls(currentMap, r, c) < 4) {
-                        coordinatesToRemove.add(new Coordinate(r, c));
-                    }
+        for (int row = 0; row < rowCount; row++) {
+            for (int col = 0; col < colCount; col++) {
+                if (isRoll(currentMap, row, col) && isAccessible(currentMap, row, col)) {
+                    coordinatesToRemove.add(new Coordinate(row, col));
                 }
             }
         }
         return new MapFinderResult(coordinatesToRemove.size(), coordinatesToRemove);
     }
 
+    private boolean isRoll(PaperRollMap map, int row, int col) {
+        return map.getValue(row, col).equals(ROLL_SYMBOL);
+    }
+
+    private boolean isAccessible(PaperRollMap map, int row, int col) {
+        return countAdjacentRolls(map, row, col) < MAX_NEIGHBORS;
+    }
+
     private int countAdjacentRolls(PaperRollMap map, int row, int col) {
         int rollCount = 0;
 
-        for (int dR = -1; dR <= 1; dR++) {
-            for (int dC = -1; dC <= 1; dC++) {
+        for (int rowOffset = -1; rowOffset <= 1; rowOffset++) {
+            for (int colOffset = -1; colOffset <= 1; colOffset++) {
+                if (rowOffset == 0 && colOffset == 0) continue;
 
-                if (dR == 0 && dC == 0) continue;
+                int neighborRow = row + rowOffset;
+                int neighborCol = col + colOffset;
 
-                int newR = row + dR;
-                int newC = col + dC;
-
-                if (checkOutOfBounds(map, newR, newC)) {
-                    // Contar si la celda es un rollo EN EL MAPA ACTUAL
-                    if (map.getValue(newR, newC).equals("@")) {
-                        rollCount++;
-                    }
+                if (isValidPosition(map, neighborRow, neighborCol) && isRoll(map, neighborRow, neighborCol)) {
+                    rollCount++;
                 }
             }
         }
         return rollCount;
     }
 
-    private boolean checkOutOfBounds(PaperRollMap map, int r, int c) {
-        int R = map.getRows();
-        int C = map.getCols();
-
-        return r >= 0 && r < R && c >= 0 && c < C;
+    private boolean isValidPosition(PaperRollMap map, int row, int col) {
+        return row >= 0 && row < map.getRows() && col >= 0 && col < map.getCols();
     }
 
-    // Record auxiliar para devolver múltiples valores de una iteración
     private record MapFinderResult(int removedCount, List<Coordinate> removableCoordinates) {}
 }

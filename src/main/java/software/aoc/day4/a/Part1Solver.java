@@ -5,59 +5,52 @@ import software.aoc.day4.Solver;
 
 public record Part1Solver(PaperRollMap rollMap) implements Solver {
 
+    private static final String ROLL_SYMBOL = "@";
+    private static final int MAX_NEIGHBORS = 4;
+
     @Override
     public int solve() {
         int accessibleRolls = 0;
-        int R = rollMap.getRows();
-        int C = rollMap.getCols();
+        int rowCount = rollMap.getRows();
+        int colCount = rollMap.getCols();
 
-        for (int r = 0; r < R; r++) {
-            for (int c = 0; c < C; c++) {
-
-                // 1. Solo evaluamos las celdas que son rollos de papel ('@')
-                if (rollMap.getValue(r, c).equals("@")) {
-
-                    // 2. Comprobamos la regla de accesibilidad (menos de 4 vecinos '@')
-                    if (countAdjacentRolls(r, c) < 4) {
-                        accessibleRolls += 1;
-                    }
+        for (int row = 0; row < rowCount; row++) {
+            for (int col = 0; col < colCount; col++) {
+                if (isRoll(row, col) && isAccessible(row, col)) {
+                    accessibleRolls++;
                 }
             }
         }
         return accessibleRolls;
     }
 
+    private boolean isRoll(int row, int col) {
+        return rollMap.getValue(row, col).equals(ROLL_SYMBOL);
+    }
+
+    private boolean isAccessible(int row, int col) {
+        return countAdjacentRolls(row, col) < MAX_NEIGHBORS;
+    }
+
     private int countAdjacentRolls(int row, int col) {
         int rollCount = 0;
 
-        // Iterar sobre los 8 posibles desplazamientos (-1 a 1)
-        for (int dR = -1; dR <= 1; dR++) {
-            for (int dC = -1; dC <= 1; dC++) {
+        for (int rowOffset = -1; rowOffset <= 1; rowOffset++) {
+            for (int colOffset = -1; colOffset <= 1; colOffset++) {
+                if (rowOffset == 0 && colOffset == 0) continue;
 
-                // 1. Omitir la celda central
-                if (dR == 0 && dC == 0) continue;
+                int neighborRow = row + rowOffset;
+                int neighborCol = col + colOffset;
 
-                int newR = row + dR;
-                int newC = col + dC;
-
-                // 2. Verificar límites antes de acceder al mapa
-                if (checkOutOfBounds(newR, newC)) {
-
-                    // 3. Contar si la posición vecina contiene un rollo '@'
-                    if (rollMap.getValue(newR, newC).equals("@")) {
-                        rollCount++;
-                    }
+                if (isValidPosition(neighborRow, neighborCol) && isRoll(neighborRow, neighborCol)) {
+                    rollCount++;
                 }
             }
         }
         return rollCount;
     }
 
-    private boolean checkOutOfBounds(int r, int c) {
-        int R = rollMap.getRows();
-        int C = rollMap.getCols();
-
-        // El Record MapFinder usa los métodos del PaperRollMap
-        return r >= 0 && r < R && c >= 0 && c < C;
+    private boolean isValidPosition(int row, int col) {
+        return row >= 0 && row < rollMap.getRows() && col >= 0 && col < rollMap.getCols();
     }
 }
